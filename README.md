@@ -36,7 +36,9 @@ It corrects a balance sheet only when exactly one value can be the wrong one. Wh
 
 **[heart-explorer](https://github.com/Ark2027/heart-explorer)** — Interactive 3D heart anatomy in the browser, 47 structures, no build step. I built it after my dad's brain aneurysm, to understand what I was looking at. [See it running.](https://ark2027.github.io/heart-explorer/)
 
-## Why most of this exists
+Everything above with code in it has a test suite running in CI.
+
+## Where the tooling came from
 
 If I find a problem, I fix it so it can't come back.
 
@@ -48,13 +50,17 @@ Three of the repos above are that audit turned into tooling. Not write-ups of th
 
 I grew up around politics, and economics always struck me as the part of it that actually decides things. So I studied it at UT Austin. Building software was not the plan.
 
-Before I finished, I interned at a hedge fund covering South American cell tower operators and an Irish homebuilder — building models, writing memos, sitting in on calls with CFOs and investor relations. The Ireland work meant reading a whole country's macroeconomy to figure out why the market had it priced wrong, and at one point it meant flying over to meet the CFO and get walked across the company. The lesson that stuck: pulling the numbers is the easy part. Knowing whether a number means what its label says is the actual job, and that turned out to be the same problem I've spent the last three years solving in code.
+From 2022 into 2023 I did equity research at Hewes Fund, building three-statement models on Latin American and European companies to work out why a market had something priced wrong. The European side meant sitting down with the management teams at Cairn Properties and Glenveagh in Dublin to understand capital structure and how they were allocating funds for buybacks.
 
-I took this role at [PeopleFund](https://peoplefund.org/), the fund's managing member, as a financial analyst straight out of school. I already knew R and Stata from economics, so I wasn't starting from nothing, but I'd never written software. The first thing I built was an AWS Lambda endpoint that took what applicants uploaded to our site and turned it into a dashboard. I learned the rest from Coursera, documentation, reference books, and friends who were patient with bad questions.
+The lesson that stuck: pulling the numbers is the easy part. Knowing whether a number means what its label says is the actual job, and that turned out to be the same problem I've spent three years solving in code.
 
-About six months in my manager left, and I ended up reporting to the CEO. Everything arrived at once: the website, reporting, compliance, architecture, coordination, the SQL. Automating my own job stopped being a side project.
+[PeopleFund](https://peoplefund.org/) hired me as a Fund Analyst in May 2023 to build the financial models for spinning the Veteran Loan Fund out into its own entity, working with the CEO, CFO, and outside counsel on the structure. It was a corporate finance job. I had never written software.
 
-The shift happened over one specific thing. I'd been downloading Excel exports off our Postgres server and cleaning them up in Python, which was already an improvement on doing it by hand. Then it occurred to me that I didn't have to download anything at all — I could tunnel into the server over SSH and pull live numbers. That collector is still running today, and the platform described above grew out of it.
+I did already know R and Stata from economics, so I wasn't starting from nothing. The first thing I built was an AWS Lambda endpoint that took what applicants uploaded to our site and turned it into a dashboard. I learned the rest from Coursera, documentation, reference books, and friends who were patient with bad questions.
+
+About six months in my manager left, and I ended up reporting to the CEO. Everything arrived at once: the website, the reporting, compliance, architecture, and the SQL.
+
+The shift came down to one specific thing. I'd been downloading Excel exports off our Postgres server and cleaning them up in Python, which was already an improvement on doing it by hand. Then it occurred to me that I didn't have to download anything at all. I could tunnel into the server over SSH and pull live numbers instead. That collector is still running today, and the platform described above grew out of it.
 
 ## Reach me
 
