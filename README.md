@@ -46,9 +46,15 @@ Three of the repos above are that audit turned into tooling. Not write-ups of th
 
 ## How I got here
 
-Economics at UT Austin, and before that a hedge fund internship analyzing South American cell tower operators and Irish homebuilders. I took this job as a financial analyst straight out of school and started writing code because the quarterly reporting took a week and I wanted that week back.
+I grew up around politics, and economics always struck me as the part of it that actually decides things. So I studied it at UT Austin. Building software was not the plan.
 
-Everything here is self-taught, built on real problems where being wrong had consequences.
+Before I finished, I interned at a hedge fund covering South American cell tower operators and an Irish homebuilder — building models, writing memos, sitting in on calls with CFOs and investor relations. The Ireland work meant reading a whole country's macroeconomy to figure out why the market had it priced wrong, and at one point it meant flying over to meet the CFO and get walked across the company. The lesson that stuck: pulling the numbers is the easy part. Knowing whether a number means what its label says is the actual job, and that turned out to be the same problem I've spent the last three years solving in code.
+
+I took this role at [PeopleFund](https://peoplefund.org/), the fund's managing member, as a financial analyst straight out of school. I already knew R and Stata from economics, so I wasn't starting from nothing, but I'd never written software. The first thing I built was an AWS Lambda endpoint that took what applicants uploaded to our site and turned it into a dashboard. I learned the rest from Coursera, documentation, reference books, and friends who were patient with bad questions.
+
+About six months in my manager left, and I ended up reporting to the CEO. Everything arrived at once: the website, reporting, compliance, architecture, coordination, the SQL. Automating my own job stopped being a side project.
+
+The shift happened over one specific thing. I'd been downloading Excel exports off our Postgres server and cleaning them up in Python, which was already an improvement on doing it by hand. Then it occurred to me that I didn't have to download anything at all — I could tunnel into the server over SSH and pull live numbers. That collector is still running today, and the platform described above grew out of it.
 
 ## Reach me
 
