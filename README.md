@@ -1,36 +1,54 @@
 # Mark Pease
 
-I run day-to-day operations for the [Veteran Loan Fund](https://www.veteranloanfund.com/), a national program that has deployed over **$100 million to 1,350 veteran and military spouse-owned businesses** through twelve CDFIs across twelve states. I also built the platform it runs on.
+I build data systems where being wrong is expensive, and the controls that catch it when they are.
 
-Both of those are the job. I handle the partner network, the application pipeline, compliance, and the reporting that goes to funders and the board. I also wrote the roughly 15,000-line system that produces that reporting, because the alternative was a week of retyping spreadsheet totals every quarter.
+Most of that has been at the [Veteran Loan Fund](https://www.veteranloanfund.com/), a national program that has deployed over **$100 million to 1,350 veteran and military spouse-owned businesses** through twelve CDFIs across twelve states. I wrote the platform it runs on, about **15,000 lines** across ingestion, reconciliation, quality control, and the front end. I also run the program's day-to-day operations, which is why the requirements were never a guess.
 
-## What I'm like to work with
+## The platform
 
-If I find a problem, I fix it so it can't come back.
+Four sources that agreed on nothing: partner Excel workbooks, a CRM Postgres database behind an SSH hop, a document store of PDFs and Word files, and an advertising API. Each one slow, each one able to fail on its own schedule.
 
-I audited our reporting pipeline expecting to find arithmetic errors. Every figure reconciled to the cent. The problems were all in the definitions — percentages that double-counted anyone recorded in two categories, a rolling twelve-month window that quietly stretched to fifteen whenever a partner had a quiet quarter, a missing column rendering as `0%` when what it meant was "nobody has this data."
+The architecture that made it work:
 
-Most of what's below came out of that audit. Not write-ups of the findings. Tools that make those specific mistakes impossible to repeat.
+**Precompute to a file rather than query live.** The dashboard reads one payload and never touches a database or an API. Live-querying four sources means the page is only as available as the least available one, and a network share that goes unreachable during a board meeting is not hypothetical.
+
+**Every source fails independently, and a failure is never a zero.** When the CRM query fails, the pipeline serves the last good snapshot and marks it stale with the timestamp of when it was actually fresh. Failing the whole refresh makes the dashboard frequently unavailable; substituting zero makes it confidently wrong. Stale data with its age attached is the only option of the three that never lies.
+
+**Publish a relational mirror alongside the JSON.** Every refresh writes 25 SQLite tables so analysts can connect their own tools instead of routing questions through me. It took an afternoon and removed most of the ad-hoc requests.
+
+Written up in full, with what I'd do differently, in **[reporting-platform-case-study](https://github.com/Ark2027/reporting-platform-case-study)**.
 
 ## Selected work
 
-**[reporting-platform-case-study](https://github.com/Ark2027/reporting-platform-case-study)** — How four unrelated data sources became one reporting system, and the five architectural decisions that mattered. No code, just the reasoning and what I'd do differently.
+**[entity-match-pipeline](https://github.com/Ark2027/entity-match-pipeline)** — Matching business records across two systems that share no key. A deterministic pass sorts every record into auto-accepted, deferred, or discarded, and an LLM adjudicator only ever sees the deferred band. It can't touch an auto-accept or resurrect a discard, so it can add automation but can't damage a decision that was already made.
 
-**[entity-match-pipeline](https://github.com/Ark2027/entity-match-pipeline)** — Matching business records across two systems that share no key. Deterministic scoring first, then an LLM adjudicator with schema-constrained tool use, grounding checks that reject invented IDs, and an evaluation harness measuring precision, error rate, and cost per call.
+The evaluation harness runs against 92 labeled records, eight of which are traps where the right answer is "none of these," included specifically to see whether a model asked to find a match will invent one. The adjudicator took automation from 95.2% to **100%** at **100% precision, 0% error, and 100% trap survival**, resolving four deferrals and correctly declining all eight traps. Cost and latency are measured per call. 69 tests.
 
-**[lending-portfolio-dashboard](https://github.com/Ark2027/lending-portfolio-dashboard)** — A ten-page analytics dashboard with no framework and no build step, running on generated data. [See it running.](https://ark2027.github.io/lending-portfolio-dashboard/)
+**[statement-extract](https://github.com/Ark2027/statement-extract)** — Pulls figures out of financial statement PDFs and checks them against the accounting identities they have to satisfy. A parser that crashes gets fixed; one that returns `2026` where total assets belong does not, because that's a number and every report downstream renders it without complaint.
 
-**[statement-extract](https://github.com/Ark2027/statement-extract)** — Pulls figures out of financial statement PDFs, then checks them against the accounting identities they have to satisfy. It only corrects a balance sheet when exactly one value can be the wrong one; otherwise it says so and changes nothing.
+It corrects a balance sheet only when exactly one value can be the wrong one. When two of the three could be, it says so and changes nothing, because guessing trades a visible problem for an invisible one. 62 tests, most of them regressions.
 
-**[impact-data-quality](https://github.com/Ark2027/impact-data-quality)** — Audits submitted spreadsheets before their numbers reach a published report. Refuses to certify rather than guessing at what a blank means.
+**[lending-portfolio-dashboard](https://github.com/Ark2027/lending-portfolio-dashboard)** — Ten pages, no framework, no build step, including a US choropleth built by hand from Albers-projection GeoJSON. Every figure derives from two generated ledgers rather than being written to a target, which is what keeps the totals, partner splits, and KPI tiles from disagreeing with each other. [See it running.](https://ark2027.github.io/lending-portfolio-dashboard/)
+
+**[impact-data-quality](https://github.com/Ark2027/impact-data-quality)** — Audits submitted spreadsheets before their numbers reach a published report. It refuses to certify rather than guessing what a blank means, and CI asserts that it refuses when handed a defective workbook.
+
+**[snapshot-diff](https://github.com/Ark2027/snapshot-diff)** — Diffs two versions of a dataset with no ID column, so a corrected typo stops looking like a row being deleted and re-added. The pairing was quadratic until I timed it: 1,600 rows a side took 1.5 seconds. Reframing it as an index lookup rather than a search got the same answers in **34ms**.
 
 **[heart-explorer](https://github.com/Ark2027/heart-explorer)** — Interactive 3D heart anatomy in the browser, 47 structures, no build step. I built it after my dad's brain aneurysm, to understand what I was looking at. [See it running.](https://ark2027.github.io/heart-explorer/)
 
+## Why most of this exists
+
+If I find a problem, I fix it so it can't come back.
+
+I audited our reporting pipeline expecting arithmetic errors. Every figure reconciled to the cent. The problems were all in the definitions — percentages that double-counted anyone recorded in two categories, a rolling twelve-month window that quietly stretched to fifteen whenever a partner had a quiet quarter, a missing column rendering as `0%` when what it meant was "nobody has this data."
+
+Three of the repos above are that audit turned into tooling. Not write-ups of the findings — code that makes those specific mistakes impossible to repeat.
+
 ## How I got here
 
-Economics at UT Austin. Before that, a hedge fund internship analyzing South American cell tower operators and Irish homebuilders.
+Economics at UT Austin, and before that a hedge fund internship analyzing South American cell tower operators and Irish homebuilders. I took this job as a financial analyst straight out of school and started writing code because the quarterly reporting took a week and I wanted that week back.
 
-I took this job as a financial analyst straight out of school and started writing code because the quarterly reporting took a week and I wanted that week back. Everything here is self-taught, built on real problems where being wrong had consequences.
+Everything here is self-taught, built on real problems where being wrong had consequences.
 
 ## Reach me
 
