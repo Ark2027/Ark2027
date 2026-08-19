@@ -36,7 +36,7 @@ It corrects a balance sheet only when exactly one value can be the wrong one. Wh
 
 **[heart-explorer](https://github.com/Ark2027/heart-explorer)** — Interactive 3D heart anatomy in the browser, 47 structures, no build step. I built it after my dad's brain aneurysm, to understand what I was looking at. [See it running.](https://ark2027.github.io/heart-explorer/)
 
-Everything above with code in it has a test suite running in CI.
+Everything above with code in it has a test suite running in CI. Also here: **[google-ads-connector](https://github.com/Ark2027/google-ads-connector)**, which pulls ten advertising reports into one payload and scrubs credentials out of anything it logs, and **[wp-runtime-content](https://github.com/Ark2027/wp-runtime-content)**, a WordPress plugin that lets non-technical staff edit an app's copy without a deploy.
 
 ## Where the tooling came from
 
@@ -44,7 +44,7 @@ If I find a problem, I fix it so it can't come back.
 
 I audited our reporting pipeline expecting arithmetic errors. Every figure reconciled to the cent. The problems were all in the definitions — percentages that double-counted anyone recorded in two categories, a rolling twelve-month window that quietly stretched to fifteen whenever a partner had a quiet quarter, a missing column rendering as `0%` when what it meant was "nobody has this data."
 
-Three of the repos above are that audit turned into tooling. Not write-ups of the findings — code that makes those specific mistakes impossible to repeat.
+The audit itself is written up in **[reporting-audit-case-study](https://github.com/Ark2027/reporting-audit-case-study)**. Three of the repos above are that audit turned into tooling: not write-ups of the findings, but code that makes those specific mistakes impossible to repeat.
 
 ## How I got here
 
