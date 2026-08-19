@@ -56,7 +56,7 @@ The lesson that stuck: pulling the numbers is the easy part. Knowing whether a n
 
 [PeopleFund](https://peoplefund.org/) hired me as a Fund Analyst in May 2023 to build the financial models for spinning the Veteran Loan Fund out into its own entity, working with the CEO, CFO, and outside counsel on the structure. It was a corporate finance job. I had never written software.
 
-I did already know R and Stata from economics, so I wasn't starting from nothing. The first thing I built was an AWS Lambda endpoint that took what applicants uploaded to our site and turned it into a dashboard. I learned the rest from Coursera, documentation, reference books, and friends who were patient with bad questions.
+I knew R and Stata from economics, so I wasn't starting from scratch. The first thing I built was an AWS Lambda endpoint that took what applicants uploaded to our site and turned it into a dashboard. I learned the rest from Coursera, documentation, reference books, and friends who were incredibly patient.
 
 About six months in my manager left, and I ended up reporting to the CEO. Everything arrived at once: the website, the reporting, compliance, architecture, and the SQL.
 
